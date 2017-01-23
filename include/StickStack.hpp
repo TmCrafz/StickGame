@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * The StickStack is a class which represents two Stacks of Sticks.
+ * The StickStack class represents two stacks of sticks
  */
 
 class StickStack
