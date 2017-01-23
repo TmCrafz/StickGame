@@ -1,13 +1,10 @@
 #include <iostream>
-#include <vector>
+#include "include/StickStack.hpp"
 
 int main()
 {
-	// The hight of the stack of sticks
-	int stackHeight{ 10 };
-	// At the beginning both stacks have the same hight
-	int leftStack{ stackHeight };
-	int rightStack{ stackHeight };
-
-
+	StickStack stickStack{ 10 };
+	stickStack.removeFromLeft();
+	stickStack.removeFromBoth();
+	stickStack.printStack();
 }
