@@ -27,3 +27,12 @@
 *.exe
 *.out
 *.app
+
+# Other
+Make
+*.swp
+*.cpp.swp
+*.swo
+*.txt~
+*~
+*.d
