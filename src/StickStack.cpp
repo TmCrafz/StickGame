@@ -21,12 +21,12 @@ int StickStack::getRightStickCount() const
 
 void StickStack::removeFromLeft()
 {
-	m_leftStack = m_leftStack <= 1 ? 0 : m_leftStack--; 
+	m_leftStack = m_leftStack <= 1 ? 0 : m_leftStack - 1; 
 }
 
 void StickStack::removeFromRight()
 {
-	m_rightStack = m_rightStack <= 1 ? 0 : m_rightStack--; 
+	m_rightStack = m_rightStack <= 1 ? 0 : m_rightStack - 1; 
 }
 
 void StickStack::removeFromBoth()
