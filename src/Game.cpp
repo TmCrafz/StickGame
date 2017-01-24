@@ -1,5 +1,6 @@
 #include "../include/Game.hpp"
 #include <iostream>
+#include <string>
 
 Game::Game(int stackHeight)
 : m_stickStack{ stackHeight }
@@ -16,32 +17,41 @@ void Game::run()
 	m_round = 0;
 	while (m_isRunning)
 	{
-		render();
-		readInput();
 		update();
 		m_round++;
 	}
 
 }
 
-void Game::readInput()
+void Game::readNextMoveInput()
 {
-	std::cin >> m_inputBuffer;
-	std::cout << std::endl;
-}
+	std::string validChars{ "" };
+	std::string inputText{ "" };
+	if (!m_stickStack.isLeftEmpty())
+	{
+		inputText += "[l] Remove from left ";
+		validChars += "l";
+	}
+	if (!m_stickStack.isRightEmpty())
+	{
+		inputText += "[r] remove from right ";
+		validChars += "r";
+	}
+	if (!m_stickStack.isLeftEmpty() && !m_stickStack.isRightEmpty())
+	{
+		inputText += "[b] Remove from both";
+		validChars += "b";
+	}
+	bool success{ false };
+	do
+	{
+		std::cout << inputText << std::endl;
+		std::cin >> m_inputBuffer;
+		success = validChars.find(m_inputBuffer) != std::string::npos;
+	} while(!success);
+} 
 
 void Game::update()
-{
-	switch(m_inputBuffer)
-	{
-		case 'l' : m_stickStack.removeFromLeft(); break;
-		case 'r' : m_stickStack.removeFromRight(); break;
-		case 'b' : m_stickStack.removeFromBoth(); break;
-		default: m_isRunning = false;
-	}
-}
-
-void Game::render()
 {
 	m_stickStack.printStack();
 	if (m_round % 2 == 0)
@@ -52,5 +62,30 @@ void Game::render()
 	{
 		std::cout << "Player Two" << std::endl;
 	}
-	std::cout << "[l] Remove from left [r] remove from right [b] Remove from both" << std::endl;
+	readNextMoveInput();
+	switch(m_inputBuffer)
+	{
+		case 'l' : m_stickStack.removeFromLeft(); break;
+		case 'r' : m_stickStack.removeFromRight(); break;
+		case 'b' : m_stickStack.removeFromBoth(); break;
+		default: m_isRunning = false;
+	}
+	if (isGameSuccessful())
+	{
+
+		if (m_round % 2 == 0)
+		{
+			std::cout << "Player one wins" << std::endl;
+		}
+		else
+		{
+			std::cout << "Player two wins" << std::endl;
+		}
+		m_isRunning = false;
+	}
+}
+
+bool Game::isGameSuccessful() const
+{
+	return m_stickStack.isEmpty();
 }

@@ -13,7 +13,9 @@ public:
 	
 	void run();
 private:
-	void readInput();
+	// Read from player which is its next move
+	void readNextMoveInput();
 	void update();
-	void render();
+
+	bool isGameSuccessful() const;
 };
