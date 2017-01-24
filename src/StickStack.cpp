@@ -9,14 +9,24 @@ StickStack::StickStack(int stackHeight)
 	
 }
 
+int StickStack::getLeftStickCount() const
+{
+	return m_leftStack;
+}
+
+int StickStack::getRightStickCount() const
+{
+	return m_rightStack;
+}
+
 void StickStack::removeFromLeft()
 {
-	m_leftStack--;
+	m_leftStack = m_leftStack <= 1 ? 0 : m_leftStack--; 
 }
 
 void StickStack::removeFromRight()
 {
-	m_rightStack--;
+	m_rightStack = m_rightStack <= 1 ? 0 : m_rightStack--; 
 }
 
 void StickStack::removeFromBoth()

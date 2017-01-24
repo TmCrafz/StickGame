@@ -17,6 +17,9 @@ public:
 
 	explicit StickStack(int stackHeight);
 	
+	int getLeftStickCount() const;
+	int getRightStickCount() const;
+
 	void removeFromLeft();
 	void removeFromRight();
 	void removeFromBoth();
