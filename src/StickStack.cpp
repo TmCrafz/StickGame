@@ -25,6 +25,22 @@ void StickStack::removeFromBoth()
 	removeFromRight();
 }
 
+
+bool StickStack::isLeftEmpty() const
+{
+	return m_leftStack < 1;
+}
+
+bool StickStack::isRightEmpty() const
+{
+	return m_rightStack < 1;
+}
+
+bool StickStack::isEmpty() const
+{
+	return isLeftEmpty() && isRightEmpty();
+}
+
 void StickStack::printStack() const
 {
 	for (int i{ m_StackHeight }; i > 0; i--)

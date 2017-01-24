@@ -20,6 +20,10 @@ public:
 	void removeFromLeft();
 	void removeFromRight();
 	void removeFromBoth();
+	
+	bool isLeftEmpty() const;
+	bool isRightEmpty() const;
+	bool isEmpty() const;
 
 	void printStack() const;
 };
