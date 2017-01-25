@@ -5,17 +5,27 @@
 AI::MoveTable::MoveTable(int rows, int columns)
 : m_Rows{ rows }
 , m_Columns{ columns }
-, m_table(m_Rows)
 {
 	// Fill table with default values
 	for (int row{ 0 }; row < m_Rows; row++)
 	{
-		std::vector<bool> m_rowEntries(m_Rows);
+		std::vector<bool> m_rowEntries;
 		for (int column{ 0 }; column < m_Columns; column++)
 		{
 			m_rowEntries.push_back(false);
-		}	
+		}
+		m_table.push_back(m_rowEntries);
 	}
+}
+
+int AI::MoveTable::getRowCnt() const
+{
+	return m_Rows;
+}
+
+int AI::MoveTable::getColumnCnt() const
+{
+	return m_Columns;
 }
 
 bool AI::MoveTable::getValue(int row, int column) const
@@ -43,21 +53,14 @@ void AI::MoveTable::print() const
 
 AI::AI(int stackSize)
 : m_stackSize{ stackSize }
+, m_moveTable{ stackSize + 1, stackSize + 1 }
 {
 	calcMoveTable();
 }
 
 void AI::printTable() const
 {
-	for (const std::vector<bool> &rowMoves : m_moveTable)
-	{
-		for (bool winMove : rowMoves)
-		{
-			char c{ winMove ? '+' : 'o' };
-			std::cout << c; 
-		}
-		std::cout << std::endl;
-	}
+	m_moveTable.print();
 }
 
 void AI::calcMoveTable()
@@ -75,14 +78,4 @@ void AI::calcMoveTable()
 	// That are the entries we start with. We fill them into the table and then check if we can get from the other empty entries
 	// to this winning entries. Then we can later select the move which lead to a win move (when possible)
 	
-	
-	for (int i{ 0 }; i <= m_stackSize; i++)
-	{
-		std::vector<bool> moveRow;
-		for (int j{ 0 }; j <= m_stackSize; j++)
-		{
-			moveRow.push_back(true);
-		}
-		m_moveTable.push_back(moveRow);
-	}
 }
