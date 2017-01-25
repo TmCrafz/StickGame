@@ -2,6 +2,7 @@
 #include "include/Game.hpp"
 #include "include/StickStack.hpp"
 #include "include/AI.hpp"
+#include <array>
 
 int main()
 {

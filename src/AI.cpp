@@ -1,11 +1,50 @@
 #include "../include/AI.hpp"
+#include <cassert>
 #include <iostream>
+
+AI::MoveTable::MoveTable(int rows, int columns)
+: m_Rows{ rows }
+, m_Columns{ columns }
+, m_table(m_Rows)
+{
+	// Fill table with default values
+	for (int row{ 0 }; row < m_Rows; row++)
+	{
+		std::vector<bool> m_rowEntries(m_Rows);
+		for (int column{ 0 }; column < m_Columns; column++)
+		{
+			m_rowEntries.push_back(false);
+		}	
+	}
+}
+
+bool AI::MoveTable::getValue(int row, int column) const
+{
+	return m_table.at(row).at(column);
+}
+
+void AI::MoveTable::setValue(int row, int column, bool value)
+{
+	m_table.at(row).at(column) = value;
+}
+
+void AI::MoveTable::print() const
+{
+	for (const std::vector<bool> &rowMoves : m_table)
+	{
+		for (bool winMove : rowMoves)
+		{
+			char c{ winMove ? '+' : 'o' };
+			std::cout << c; 
+		}
+		std::cout << std::endl;
+	}
+}
 
 AI::AI(int stackSize)
 : m_stackSize{ stackSize }
-, m_moveTable{ calcMoveTable(stackSize) }
 {
-
+	calcMoveTable();
 }
 
 void AI::printTable() const
@@ -21,18 +60,29 @@ void AI::printTable() const
 	}
 }
 
-std::vector<std::vector<bool>> AI::calcMoveTable(int stackSize) const
+void AI::calcMoveTable()
 {
-	std::vector<std::vector<bool>> moveTable; 
+	// The moveTable have row and column cnt from 0 to m_stackSize.
+	// In the Stack Game the player, which pull the takes the last stick wins.
+	// There are 3 possible moves: 
+	//    -take one stick of the left stack
+	//    -take one stick of the right stack
+	//    -take one stock of both stacks
+	// So a player can win when there are only oe stick on every stack or
+	// When one stack is empty and the remaining stack have only one stick.
+	// A stack is now represented as a tuple of remaining sticks on stack: (leftStack, rightStack)
+	// So its clear that there is a winning chance when there have the following cases: (1, 0), (0, 1), (1, 1)
+	// That are the entries we start with. We fill them into the table and then check if we can get from the other empty entries
+	// to this winning entries. Then we can later select the move which lead to a win move (when possible)
 	
-	for (int i{ 0 }; i <= stackSize; i++)
+	
+	for (int i{ 0 }; i <= m_stackSize; i++)
 	{
 		std::vector<bool> moveRow;
-		for (int j{ 0 }; j <= stackSize; j++)
+		for (int j{ 0 }; j <= m_stackSize; j++)
 		{
 			moveRow.push_back(true);
 		}
-		moveTable.push_back(moveRow);
+		m_moveTable.push_back(moveRow);
 	}
-	return moveTable;
 }

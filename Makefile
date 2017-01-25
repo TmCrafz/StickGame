@@ -63,7 +63,7 @@ MY_CFLAGS = -std=c++14
 MY_LIBS   = 
 
 # The pre-processor options used by the cpp (man cpp for more).
-CPPFLAGS  = -Wall
+CPPFLAGS  = -Wall -pedantic
 
 # The options used in linking as well as in any direct use of ld.
 LDFLAGS   =

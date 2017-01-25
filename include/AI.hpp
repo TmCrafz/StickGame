@@ -7,11 +7,30 @@
 
 class AI
 {
+
+public:
+	class MoveTable
+	{
+	private:
+		const int m_Rows;
+		const int m_Columns;
+		std::vector<std::vector<bool>> m_table;
+	public:
+		MoveTable(int rows, int columns);
+
+		bool getValue(int row, int column) const;
+		void setValue(int row, int column, bool value);
+
+		void print() const;
+
+
+	};
+
 private:
 	int m_stackSize;
 	// Store which game moves lead to win and which to lose
 	// The size of the vectors are the stack size + 1
-	const std::vector<std::vector<bool>> m_moveTable;
+	std::vector<std::vector<bool>> m_moveTable;
 
 public:
 	explicit AI(int stackSize);
@@ -20,6 +39,6 @@ public:
 
 private:
 
-	std::vector<std::vector<bool>> calcMoveTable(int stackSize) const;
+	void calcMoveTable();
 
 };
