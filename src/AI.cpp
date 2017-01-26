@@ -70,12 +70,47 @@ void AI::calcMoveTable()
 	// There are 3 possible moves: 
 	//    -take one stick of the left stack
 	//    -take one stick of the right stack
-	//    -take one stock of both stacks
-	// So a player can win when there are only oe stick on every stack or
-	// When one stack is empty and the remaining stack have only one stick.
+	//    -take one stick of both stacks
+	// So a player can win when there are only one stick on every stack or
+	// when one stack is empty and the remaining stack have only one stick.
 	// A stack is now represented as a tuple of remaining sticks on stack: (leftStack, rightStack)
-	// So its clear that there is a winning chance when there have the following cases: (1, 0), (0, 1), (1, 1)
-	// That are the entries we start with. We fill them into the table and then check if we can get from the other empty entries
-	// to this winning entries. Then we can later select the move which lead to a win move (when possible)
+	// We start with setting the (0, 0) entry to false.
+	// Now we check if we can reach this entry from the surrounding fields by making one of the three moves mentioned above.
+	// If this is the case we have a win chance from the field where we have test it. We check this for every entry and get
+	// a moveTable which says us from which position we have a possibility to win.
 	
+	for (int row{ 0 }; row < m_moveTable.getRowCnt(); row++)
+	{
+		for (int column{ 0 }; column < m_moveTable.getColumnCnt(); column++)
+		{
+			// The first entry have to be false so the surrounding entries can determine that there can win
+			// (There is a win possibility when there is a move which leads to an entry where is no win possibility, 
+			// so a entry which is false)
+			if (row == 0 && column == 0)
+			{
+				m_moveTable.setValue(0, 0, false);
+			}
+			
+			// Determine if there is a win chance from this position, when we take a stick of the right stack
+			if (column > 0 && m_moveTable.getValue(row, column - 1) == false)
+			{
+				m_moveTable.setValue(row, column, true);
+				continue;
+			}
+			// Determine if there is a win chance from this position, when we take a stick of the left stack
+			if (row > 0 && m_moveTable.getValue(row - 1, column) == false)
+			{
+				m_moveTable.setValue(row, column, true);
+				continue;
+			}			
+			// Determine if there is a win chance from this position, when we take a stick of both stacks
+			if (row > 0 && column > 0 && m_moveTable.getValue(row - 1, column - 1) == false)
+			{
+				m_moveTable.setValue(row, column, true);
+				continue;
+			}			
+		}
+
+	}
+
 }
