@@ -4,6 +4,7 @@
 
 Game::Game(int stackHeight)
 : m_stickStack{ stackHeight }
+, m_ai{ stackHeight }
 , m_inputBuffer{ '\0' }
 , m_isRunning{ false }
 , m_round{ 0 }
@@ -62,13 +63,27 @@ void Game::update()
 	{
 		std::cout << "Player Two" << std::endl;
 	}
-	readNextMoveInput();
-	switch(m_inputBuffer)
+	if (m_round % 2 == 0)
 	{
-		case 'l' : m_stickStack.removeFromLeft(); break;
-		case 'r' : m_stickStack.removeFromRight(); break;
-		case 'b' : m_stickStack.removeFromBoth(); break;
-		default: m_isRunning = false;
+		readNextMoveInput();
+		switch(m_inputBuffer)
+		{
+			case 'l': m_stickStack.removeFromLeft(); break;
+			case 'r': m_stickStack.removeFromRight(); break;
+			case 'b': m_stickStack.removeFromBoth(); break;
+			default: m_isRunning = false;
+		}
+	}
+	// AI
+	else
+	{
+		AI::GameMove move{ m_ai.getNextGameMove(m_stickStack.getLeftStickCount(), m_stickStack.getRightStickCount()) };
+		switch(move)
+		{
+			case AI::GameMove::LEFT: m_stickStack.removeFromLeft(); break;
+			case AI::GameMove::RIGHT: m_stickStack.removeFromRight(); break;
+			case AI::GameMove::BOTH: m_stickStack.removeFromBoth(); break;
+		}
 	}
 	if (isGameSuccessful())
 	{

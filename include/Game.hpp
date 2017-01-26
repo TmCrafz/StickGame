@@ -1,10 +1,12 @@
 #pragma once
+#include "../include/AI.hpp"
 #include "../include/StickStack.hpp"
 
 class Game
 {
 private:
 	StickStack m_stickStack;
+	AI m_ai;
 	char m_inputBuffer;
 	bool m_isRunning;
 	int m_round;

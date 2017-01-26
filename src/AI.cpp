@@ -51,11 +51,46 @@ void AI::MoveTable::print() const
 	}
 }
 
-AI::AI(int stackSize)
-: m_stackSize{ stackSize }
-, m_moveTable{ stackSize + 1, stackSize + 1 }
+AI::AI(int stackHeight)
+: m_stackHeight{ stackHeight }
+, m_moveTable{ stackHeight + 1, stackHeight + 1 }
 {
 	calcMoveTable();
+}
+
+
+AI::GameMove AI::getNextGameMove(int leftStackCnt, int rightStackCnt) const
+{
+	if (m_moveTable.getValue(leftStackCnt, rightStackCnt) == true)
+	{
+					
+	}
+	// This move result in a game state in which we can win, even of the other player do all right
+	if (rightStackCnt > 0 && m_moveTable.getValue(leftStackCnt, rightStackCnt - 1) == false)
+	{
+		return GameMove::RIGHT;
+	}
+	if (leftStackCnt > 0 && m_moveTable.getValue(leftStackCnt - 1, rightStackCnt) == false)
+	{
+		return GameMove::LEFT;
+	}			
+	if (leftStackCnt > 0 && rightStackCnt > 0 && m_moveTable.getValue(leftStackCnt - 1, rightStackCnt - 1) == false)
+	{
+		return GameMove::BOTH;
+	}
+
+	// No clever move possible do anything
+	// Implement random choice later
+	if (rightStackCnt > 0)
+	{
+		return GameMove::RIGHT;
+	}
+	if (leftStackCnt > 0)
+	{
+		return GameMove::LEFT;
+	}
+	// Should never get reached
+	return GameMove::BOTH;
 }
 
 void AI::printTable() const
@@ -63,22 +98,24 @@ void AI::printTable() const
 	m_moveTable.print();
 }
 
+
+/**
+ * The moveTable have row and column cnt from 0 to m_stackSize.
+ * In the Stack Game the player, which pull the takes the last stick wins.
+ * There are 3 possible moves: 
+ *    -take one stick of the left stack
+ *    -take one stick of the right stack
+ *    -take one stick of both stacks
+ * So a player can win when there are only one stick on every stack or
+ * when one stack is empty and the remaining stack have only one stick.
+ * A stack is now represented as a tuple of remaining sticks on stack: (leftStack, rightStack)
+ * We start with setting the (0, 0) entry to false.
+ * Now we check if we can reach this entry from the surrounding fields by making one of the three moves mentioned above.
+ * If this is the case we have a win chance from the field where we have test it. We check this for every entry and get
+ * a moveTable which says us from which position we have a possibility to win.
+ */
 void AI::calcMoveTable()
 {
-	// The moveTable have row and column cnt from 0 to m_stackSize.
-	// In the Stack Game the player, which pull the takes the last stick wins.
-	// There are 3 possible moves: 
-	//    -take one stick of the left stack
-	//    -take one stick of the right stack
-	//    -take one stick of both stacks
-	// So a player can win when there are only one stick on every stack or
-	// when one stack is empty and the remaining stack have only one stick.
-	// A stack is now represented as a tuple of remaining sticks on stack: (leftStack, rightStack)
-	// We start with setting the (0, 0) entry to false.
-	// Now we check if we can reach this entry from the surrounding fields by making one of the three moves mentioned above.
-	// If this is the case we have a win chance from the field where we have test it. We check this for every entry and get
-	// a moveTable which says us from which position we have a possibility to win.
-	
 	for (int row{ 0 }; row < m_moveTable.getRowCnt(); row++)
 	{
 		for (int column{ 0 }; column < m_moveTable.getColumnCnt(); column++)
@@ -110,7 +147,5 @@ void AI::calcMoveTable()
 				continue;
 			}			
 		}
-
 	}
-
 }
